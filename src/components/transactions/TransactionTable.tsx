@@ -43,20 +43,9 @@ import {
 } from "../ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
-
-interface Transaction {
-  id: string;
-  date: Date;
-  description: string;
-  amount: number;
-  category: string;
-  type: "Einnahme" | "Ausgabe";
-  status: "Abgestimmt" | "Ausstehend";
-  receiptId?: string;
-}
+import { useTransactions, Transaction } from "@/contexts/TransactionContext";
 
 interface TransactionTableProps {
-  transactions?: Transaction[];
   onEdit?: (transaction: Transaction) => void;
   onDelete?: (transactionId: string) => void;
   onViewReceipt?: (receiptId: string) => void;
@@ -64,12 +53,12 @@ interface TransactionTableProps {
 }
 
 const TransactionTable: React.FC<TransactionTableProps> = ({
-  transactions = defaultTransactions,
   onEdit = () => {},
   onDelete = () => {},
   onViewReceipt = () => {},
   onBulkAction = () => {},
 }) => {
+  const { transactions, deleteTransaction } = useTransactions();
   const [selectedTransactions, setSelectedTransactions] = useState<string[]>(
     [],
   );
@@ -89,7 +78,19 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
     ...Array.from(new Set(transactions.map((t) => t.category))),
   ];
 
-  const filteredTransactions = transactions.filter((transaction) => {
+  // Convert transactions to display format
+  const displayTransactions = transactions.map(transaction => ({
+    id: transaction.id,
+    date: transaction.date,
+    description: `${transaction.supplier}${transaction.comment ? ` - ${transaction.comment}` : ''}`,
+    amount: transaction.amount,
+    category: transaction.category,
+    type: transaction.type === "income" ? "Einnahme" : "Ausgabe",
+    status: "Abgestimmt", // For now, all manual entries are considered reconciled
+    receiptId: undefined, // Manual entries don't have receipts
+  }));
+
+  const filteredTransactions = displayTransactions.filter((transaction) => {
     // Search filter
     const matchesSearch = transaction.description
       .toLowerCase()
@@ -139,8 +140,17 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   };
 
   const handleBulkAction = (action: string) => {
-    onBulkAction(action, selectedTransactions);
-    setSelectedTransactions([]);
+    if (action === "delete") {
+      selectedTransactions.forEach(id => deleteTransaction(id));
+      setSelectedTransactions([]);
+    } else {
+      onBulkAction(action, selectedTransactions);
+      setSelectedTransactions([]);
+    }
+  };
+
+  const handleDelete = (transactionId: string) => {
+    deleteTransaction(transactionId);
   };
 
   const clearFilters = () => {
@@ -178,8 +188,8 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                     {dateRange.from ? (
                       dateRange.to ? (
                         <span>
-                          {format(dateRange.from, "d. MMM yyyy", { locale: { localize: { month: (n: number) => ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"][n] } } })} -{" "}
-                          {format(dateRange.to, "d. MMM yyyy", { locale: { localize: { month: (n: number) => ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"][n] } } })}
+                          {format(dateRange.from, "d. MMM yyyy")} -{" "}
+                          {format(dateRange.to, "d. MMM yyyy")}
                         </span>
                       ) : (
                         <span>{format(dateRange.from, "d. MMM yyyy")}</span>
@@ -309,7 +319,14 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                 {filteredTransactions.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="h-24 text-center">
-                      Keine Transaktionen gefunden.
+                      {transactions.length === 0 ? (
+                        <div className="text-muted-foreground">
+                          <p>Keine Transaktionen vorhanden.</p>
+                          <p className="text-sm">Fügen Sie Ihre erste Transaktion über "Einnahme hinzufügen" hinzu.</p>
+                        </div>
+                      ) : (
+                        "Keine Transaktionen gefunden."
+                      )}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -357,11 +374,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1">
-                          {transaction.status === "Abgestimmt" ? (
-                            <CheckCircle className="h-4 w-4 text-green-500" />
-                          ) : (
-                            <XCircle className="h-4 w-4 text-amber-500" />
-                          )}
+                          <CheckCircle className="h-4 w-4 text-green-500" />
                           <span className="text-xs">{transaction.status}</span>
                         </div>
                       </TableCell>
@@ -375,21 +388,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
-                              onClick={() => onEdit(transaction)}
-                            >
-                              <Edit className="h-4 w-4 mr-2" /> Bearbeiten
-                            </DropdownMenuItem>
-                            {transaction.receiptId && (
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  onViewReceipt(transaction.receiptId!)
-                                }
-                              >
-                                <Eye className="h-4 w-4 mr-2" /> Beleg anzeigen
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuItem
-                              onClick={() => onDelete(transaction.id)}
+                              onClick={() => handleDelete(transaction.id)}
                               className="text-red-600"
                             >
                               <Trash2 className="h-4 w-4 mr-2" /> Löschen
@@ -408,85 +407,5 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
     </Card>
   );
 };
-
-// Sample data for default display
-const defaultTransactions: Transaction[] = [
-  {
-    id: "t1",
-    date: new Date(2023, 9, 15),
-    description: "Bürobedarf - Staples",
-    amount: 124.56,
-    category: "Bürobedarf",
-    type: "Ausgabe",
-    status: "Abgestimmt",
-    receiptId: "r1",
-  },
-  {
-    id: "t2",
-    date: new Date(2023, 9, 14),
-    description: "Kundenzahlung - ABC GmbH",
-    amount: 1500.0,
-    category: "Dienstleistungen",
-    type: "Einnahme",
-    status: "Abgestimmt",
-  },
-  {
-    id: "t3",
-    date: new Date(2023, 9, 12),
-    description: "Monatsmiete",
-    amount: 2000.0,
-    category: "Miete",
-    type: "Ausgabe",
-    status: "Abgestimmt",
-    receiptId: "r2",
-  },
-  {
-    id: "t4",
-    date: new Date(2023, 9, 10),
-    description: "Nebenkosten - Strom",
-    amount: 145.32,
-    category: "Nebenkosten",
-    type: "Ausgabe",
-    status: "Ausstehend",
-    receiptId: "r3",
-  },
-  {
-    id: "t5",
-    date: new Date(2023, 9, 8),
-    description: "Marketing-Kampagne - Facebook Ads",
-    amount: 350.0,
-    category: "Marketing",
-    type: "Ausgabe",
-    status: "Ausstehend",
-  },
-  {
-    id: "t6",
-    date: new Date(2023, 9, 5),
-    description: "Produktverkäufe - Online-Shop",
-    amount: 2750.5,
-    category: "Verkäufe",
-    type: "Einnahme",
-    status: "Abgestimmt",
-  },
-  {
-    id: "t7",
-    date: new Date(2023, 9, 3),
-    description: "Geschäftsessen - Kundentermin",
-    amount: 84.25,
-    category: "Bewirtung",
-    type: "Ausgabe",
-    status: "Ausstehend",
-    receiptId: "r4",
-  },
-  {
-    id: "t8",
-    date: new Date(2023, 9, 1),
-    description: "Software-Abonnement - Buchhaltung",
-    amount: 29.99,
-    category: "Professionelle Dienstleistungen",
-    type: "Ausgabe",
-    status: "Abgestimmt",
-  },
-];
 
 export default TransactionTable;

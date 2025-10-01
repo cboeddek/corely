@@ -1,40 +1,43 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, PlusCircle, FileSpreadsheet } from "lucide-react";
 import Link from "next/link";
 import TransactionTable from "@/components/transactions/TransactionTable";
+import AppLayout from "@/components/AppLayout";
 
 export default function TransactionsPage() {
   return (
-    <div className="flex h-screen bg-background">
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="border-b bg-card/50 backdrop-blur-sm">
-          <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-3">
-              <Link href="/">
-                <Button variant="ghost" size="icon">
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-              </Link>
-              <h1 className="text-xl font-semibold text-foreground">Alle Transaktionen</h1>
-            </div>
+    <AppLayout>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Transaktionen</h1>
+            <p className="text-muted-foreground">
+              Verwalten Sie alle Ihre Einnahmen und Ausgaben
+            </p>
           </div>
-        </header>
-        <main className="flex-1 overflow-auto">
-          <div className="p-6">
-            <Card className="border-border bg-card/50 backdrop-blur-sm">
-              <CardContent className="p-6">
-                <TransactionTable />
-              </CardContent>
-            </Card>
+          <div className="flex items-center gap-2">
+            <Link href="/csv-import">
+              <Button variant="outline" className="gap-2">
+                <FileSpreadsheet className="h-4 w-4" />
+                CSV importieren
+              </Button>
+            </Link>
+            <Link href="/manual-entry">
+              <Button className="gap-2">
+                <PlusCircle className="h-4 w-4" />
+                Neue Transaktion
+              </Button>
+            </Link>
           </div>
-        </main>
+        </div>
+
+        {/* Transaction Table */}
+        <TransactionTable />
       </div>
-    </div>
+    </AppLayout>
   );
 }
-
-
