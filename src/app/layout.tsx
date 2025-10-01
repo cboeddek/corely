@@ -1,4 +1,5 @@
 import { TempoInit } from "@/components/tempo-init";
+import { TransactionProvider } from "@/contexts/TransactionContext";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
@@ -20,7 +21,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       {/* <Script src="https://api.tempo.build/proxy-asset?url=https://storage.googleapis.com/tempo-public-assets/error-handling.js" /> [deprecated] */}
       <body className={inter.className}>
-        {children}
+        <TransactionProvider>
+          {children}
+        </TransactionProvider>
         <TempoInit />
       </body>
     </html>

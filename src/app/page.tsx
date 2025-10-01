@@ -58,10 +58,12 @@ export default function DashboardPage() {
                   Beleg hochladen
                 </Button>
               </Link>
-              <Button variant="outline" className="gap-2 border-border hover:bg-accent">
-                <PlusCircle size={16} />
-                Einnahme hinzufügen
-              </Button>
+              <Link href="/manual-entry">
+                <Button variant="outline" className="gap-2 border-border hover:bg-accent">
+                  <PlusCircle size={16} />
+                  Einnahme hinzufügen
+                </Button>
+              </Link>
               <Link href="/transactions">
                 <Button variant="outline" className="gap-2 border-border hover:bg-accent">
                   <ListFilter size={16} />
