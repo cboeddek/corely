@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, PlusCircle, ListFilter, Bell, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 import FinancialSummary from "@/components/dashboard/FinancialSummary";
 import AnalyticsCharts from "@/components/dashboard/AnalyticsCharts";
 
@@ -51,18 +52,22 @@ export default function DashboardPage() {
           <div className="p-6 space-y-6">
             {/* Quick Action Buttons */}
             <div className="flex flex-wrap gap-3">
-              <Button className="gap-2 bg-primary hover:bg-primary/90">
-                <Upload size={16} />
-                Beleg hochladen
-              </Button>
+              <Link href="/upload">
+                <Button className="gap-2 bg-primary hover:bg-primary/90">
+                  <Upload size={16} />
+                  Beleg hochladen
+                </Button>
+              </Link>
               <Button variant="outline" className="gap-2 border-border hover:bg-accent">
                 <PlusCircle size={16} />
                 Einnahme hinzufügen
               </Button>
-              <Button variant="outline" className="gap-2 border-border hover:bg-accent">
-                <ListFilter size={16} />
-                Alle Transaktionen anzeigen
-              </Button>
+              <Link href="/transactions">
+                <Button variant="outline" className="gap-2 border-border hover:bg-accent">
+                  <ListFilter size={16} />
+                  Alle Transaktionen anzeigen
+                </Button>
+              </Link>
             </div>
 
             {/* Financial Summary Cards */}
