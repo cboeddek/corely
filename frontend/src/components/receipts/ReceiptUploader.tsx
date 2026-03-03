@@ -112,7 +112,7 @@ export default function ReceiptUploader({
       // optional fake progress
       const t = setInterval(() => setUploadProgress((p) => (p >= 90 ? 90 : p + 10)), 200);
 
-      const res = await fetch("/api", { method: "POST", body: form });
+      const res = await fetch("/api/ocr", { method: "POST", body: form });
       clearInterval(t);
 
       if (!res.ok) {

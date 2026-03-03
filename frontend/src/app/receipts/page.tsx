@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 import AppLayout from "../../components/AppLayout"; // Added import for AppLayout
+import Link from "next/link";
 
 // Mock data for receipts - in a real app this would come from your backend
 const mockReceipts = [
@@ -66,10 +67,12 @@ export default function ReceiptsPage() {
               Verwalten Sie alle hochgeladenen Belege und Rechnungen
             </p>
           </div>
-          <Button className="gap-2">
-            <Upload className="h-4 w-4" />
-            Neuen Beleg hochladen
-          </Button>
+          <Link href="/upload">
+            <Button className="gap-2">
+              <Upload className="h-4 w-4" />
+              Neuen Beleg hochladen
+            </Button>
+          </Link>
         </div>
 
         {/* Filters and Search */}
@@ -167,10 +170,12 @@ export default function ReceiptsPage() {
               <p className="text-muted-foreground mb-4">
                 Laden Sie Ihren ersten Beleg hoch, um zu beginnen.
               </p>
-              <Button className="gap-2">
-                <Upload className="h-4 w-4" />
-                Ersten Beleg hochladen
-              </Button>
+              <Link href="/upload">
+                <Button className="gap-2">
+                  <Upload className="h-4 w-4" />
+                  Ersten Beleg hochladen
+                </Button>
+              </Link>
             </div>
           </Card>
         )}

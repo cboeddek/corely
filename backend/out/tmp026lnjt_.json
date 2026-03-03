@@ -1,0 +1,126 @@
+{
+  "doc_id": "bb92b66a-3e48-404c-a373-e175128912bc",
+  "doc_type": "INVOICE",
+  "issue_date": "2025-08-31",
+  "service_date": null,
+  "currency": "EUR",
+  "original_filename": "tmp026lnjt_.PDF",
+  "source_json": {
+    "model_id": "prebuilt-invoice",
+    "fields_present": [
+      "CustomerAddress",
+      "CustomerAddressRecipient",
+      "CustomerId",
+      "CustomerName",
+      "InvoiceDate",
+      "InvoiceId",
+      "InvoiceTotal",
+      "Items",
+      "PaymentDetails",
+      "SubTotal",
+      "TaxDetails",
+      "TotalTax",
+      "VendorAddress",
+      "VendorAddressRecipient",
+      "VendorName",
+      "VendorTaxId"
+    ],
+    "api_version": "2024-11-30"
+  },
+  "extraction_confidence": 0.888,
+  "seller": {
+    "name": "SB\nTankstelle",
+    "address": "Im Dörener Feld 4\n33100 Paderborn",
+    "country": null,
+    "vat_id": "DE 125 687 888"
+  },
+  "buyer": {
+    "name": "Bödeker&Söhne Steuerberater-Rechtsanw\nalt",
+    "address": "Riemekestraße 17\n33102 PADERBORN\nGERMANY"
+  },
+  "totals": {
+    "gross": 349.42,
+    "net": 293.63,
+    "vat": 55.79
+  },
+  "vat_breakdown": [
+    {
+      "rate": null,
+      "net": null,
+      "vat": 55.79,
+      "gross": null
+    }
+  ],
+  "lines": [
+    {
+      "description": "3 Diesel",
+      "quantity": 30.88,
+      "unit": "l",
+      "unit_price": null,
+      "net": 49.99,
+      "vat": 7.98,
+      "gross": null,
+      "vat_rate": "19"
+    },
+    {
+      "description": "3 Diesel",
+      "quantity": 33.81,
+      "unit": "l",
+      "unit_price": null,
+      "net": 50.0,
+      "vat": 7.98,
+      "gross": null,
+      "vat_rate": "19"
+    },
+    {
+      "description": "3 Diesel",
+      "quantity": 33.99,
+      "unit": "l",
+      "unit_price": null,
+      "net": 49.93,
+      "vat": 7.97,
+      "gross": null,
+      "vat_rate": "19"
+    },
+    {
+      "description": "5 Super E5",
+      "quantity": 29.38,
+      "unit": "l",
+      "unit_price": null,
+      "net": 49.92,
+      "vat": 7.97,
+      "gross": null,
+      "vat_rate": "19"
+    },
+    {
+      "description": "5 Super E5",
+      "quantity": 30.51,
+      "unit": "l",
+      "unit_price": null,
+      "net": 50.01,
+      "vat": 7.98,
+      "gross": null,
+      "vat_rate": "19"
+    },
+    {
+      "description": "5 Super E5",
+      "quantity": 30.68,
+      "unit": "l",
+      "unit_price": null,
+      "net": 49.98,
+      "vat": 7.98,
+      "gross": null,
+      "vat_rate": "19"
+    },
+    {
+      "description": "5 Super E5",
+      "quantity": 29.36,
+      "unit": "l",
+      "unit_price": null,
+      "net": 49.59,
+      "vat": 7.92,
+      "gross": null,
+      "vat_rate": "19"
+    }
+  ]
+}
