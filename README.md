@@ -43,7 +43,7 @@ The main focus of this MVP is a smooth **receipt upload** flow with **automatic 
    AZURE_DOCINTEL_KEY=YOUR_KEY
    ```
 
-   The concrete endpoint and key can be provided on request.
+   #### Important note: The concrete API endpoint and key are provided on request!
 
 3. Start the API:
 
